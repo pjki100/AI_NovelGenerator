@@ -6,6 +6,7 @@ from ui.context_menu import TextWidgetContextMenu
 from tooltips import tooltips
 
 def build_novel_params_area(self, start_row=1):
+    """构建小说参数输入区，强调可读性与输入引导。"""
     self.params_frame = ctk.CTkScrollableFrame(self.right_frame, orientation="vertical")
     self.params_frame.grid(row=start_row, column=0, sticky="nsew", padx=5, pady=5)
     self.params_frame.columnconfigure(1, weight=1)
@@ -20,7 +21,12 @@ def build_novel_params_area(self, start_row=1):
 
     # 2) 类型(Genre)
     create_label_with_help_for_novel_params(self, parent=self.params_frame, label_text="类型(Genre):", tooltip_key="genre", row=1, column=0, font=("Microsoft YaHei", 12))
-    genre_entry = ctk.CTkEntry(self.params_frame, textvariable=self.genre_var, font=("Microsoft YaHei", 12))
+    genre_entry = ctk.CTkEntry(
+        self.params_frame,
+        textvariable=self.genre_var,
+        font=("Microsoft YaHei", 12),
+        placeholder_text="如：玄幻 / 科幻 / 悬疑"
+    )
     genre_entry.grid(row=1, column=1, padx=5, pady=5, sticky="ew")
 
     # 3) 章节数 & 每章字数
@@ -31,11 +37,23 @@ def build_novel_params_area(self, start_row=1):
     chapter_word_frame.columnconfigure((0, 1, 2, 3), weight=0)
     num_chapters_label = ctk.CTkLabel(chapter_word_frame, text="章节数:", font=("Microsoft YaHei", 12))
     num_chapters_label.grid(row=0, column=0, padx=5, pady=5, sticky="e")
-    num_chapters_entry = ctk.CTkEntry(chapter_word_frame, textvariable=self.num_chapters_var, width=60, font=("Microsoft YaHei", 12))
+    num_chapters_entry = ctk.CTkEntry(
+        chapter_word_frame,
+        textvariable=self.num_chapters_var,
+        width=60,
+        font=("Microsoft YaHei", 12),
+        placeholder_text="10"
+    )
     num_chapters_entry.grid(row=0, column=1, padx=5, pady=5, sticky="w")
     word_number_label = ctk.CTkLabel(chapter_word_frame, text="每章字数:", font=("Microsoft YaHei", 12))
     word_number_label.grid(row=0, column=2, padx=(15, 5), pady=5, sticky="e")
-    word_number_entry = ctk.CTkEntry(chapter_word_frame, textvariable=self.word_number_var, width=60, font=("Microsoft YaHei", 12))
+    word_number_entry = ctk.CTkEntry(
+        chapter_word_frame,
+        textvariable=self.word_number_var,
+        width=60,
+        font=("Microsoft YaHei", 12),
+        placeholder_text="3000"
+    )
     word_number_entry.grid(row=0, column=3, padx=5, pady=5, sticky="w")
 
     # 4) 保存路径
@@ -44,7 +62,12 @@ def build_novel_params_area(self, start_row=1):
     self.filepath_frame = ctk.CTkFrame(self.params_frame)
     self.filepath_frame.grid(row=row_fp, column=1, padx=5, pady=5, sticky="nsew")
     self.filepath_frame.columnconfigure(0, weight=1)
-    filepath_entry = ctk.CTkEntry(self.filepath_frame, textvariable=self.filepath_var, font=("Microsoft YaHei", 12))
+    filepath_entry = ctk.CTkEntry(
+        self.filepath_frame,
+        textvariable=self.filepath_var,
+        font=("Microsoft YaHei", 12),
+        placeholder_text="请选择小说工程保存目录"
+    )
     filepath_entry.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
     browse_btn = ctk.CTkButton(self.filepath_frame, text="浏览...", command=self.browse_folder, width=60, font=("Microsoft YaHei", 12))
     browse_btn.grid(row=0, column=1, padx=5, pady=5, sticky="e")
@@ -52,7 +75,13 @@ def build_novel_params_area(self, start_row=1):
     # 5) 章节号
     row_chap_num = 4
     create_label_with_help_for_novel_params(self, parent=self.params_frame, label_text="章节号:", tooltip_key="chapter_num", row=row_chap_num, column=0, font=("Microsoft YaHei", 12))
-    chapter_num_entry = ctk.CTkEntry(self.params_frame, textvariable=self.chapter_num_var, width=80, font=("Microsoft YaHei", 12))
+    chapter_num_entry = ctk.CTkEntry(
+        self.params_frame,
+        textvariable=self.chapter_num_var,
+        width=80,
+        font=("Microsoft YaHei", 12),
+        placeholder_text="1"
+    )
     chapter_num_entry.grid(row=row_chap_num, column=1, padx=5, pady=5, sticky="w")
 
     # 6) 内容指导
@@ -81,60 +110,84 @@ def build_novel_params_area(self, start_row=1):
         self.char_inv_text.insert("0.0", self.characters_involved_var.get())
     
     # 导入按钮
-    import_btn = ctk.CTkButton(char_inv_frame, text="导入", width=60, 
+    import_btn = ctk.CTkButton(char_inv_frame, text="从角色库导入", width=100, 
                              command=self.show_character_import_window,
                              font=("Microsoft YaHei", 12))
     import_btn.grid(row=0, column=1, padx=(0,5), pady=5, sticky="e")
     row_idx += 1
     create_label_with_help_for_novel_params(self, parent=self.params_frame, label_text="关键道具:", tooltip_key="key_items", row=row_idx, column=0, font=("Microsoft YaHei", 12))
-    key_items_entry = ctk.CTkEntry(self.params_frame, textvariable=self.key_items_var, font=("Microsoft YaHei", 12))
+    key_items_entry = ctk.CTkEntry(
+        self.params_frame,
+        textvariable=self.key_items_var,
+        font=("Microsoft YaHei", 12),
+        placeholder_text="如：古籍、钥匙、法器"
+    )
     key_items_entry.grid(row=row_idx, column=1, padx=5, pady=5, sticky="ew")
     row_idx += 1
     create_label_with_help_for_novel_params(self, parent=self.params_frame, label_text="空间坐标:", tooltip_key="scene_location", row=row_idx, column=0, font=("Microsoft YaHei", 12))
-    scene_loc_entry = ctk.CTkEntry(self.params_frame, textvariable=self.scene_location_var, font=("Microsoft YaHei", 12))
+    scene_loc_entry = ctk.CTkEntry(
+        self.params_frame,
+        textvariable=self.scene_location_var,
+        font=("Microsoft YaHei", 12),
+        placeholder_text="如：边陲城镇 / 王都 / 深渊遗迹"
+    )
     scene_loc_entry.grid(row=row_idx, column=1, padx=5, pady=5, sticky="ew")
     row_idx += 1
     create_label_with_help_for_novel_params(self, parent=self.params_frame, label_text="时间压力:", tooltip_key="time_constraint", row=row_idx, column=0, font=("Microsoft YaHei", 12))
-    time_const_entry = ctk.CTkEntry(self.params_frame, textvariable=self.time_constraint_var, font=("Microsoft YaHei", 12))
+    time_const_entry = ctk.CTkEntry(
+        self.params_frame,
+        textvariable=self.time_constraint_var,
+        font=("Microsoft YaHei", 12),
+        placeholder_text="如：三天后决战"
+    )
     time_const_entry.grid(row=row_idx, column=1, padx=5, pady=5, sticky="ew")
 
 def build_optional_buttons_area(self, start_row=2):
-    self.optional_btn_frame = ctk.CTkFrame(self.right_frame)
+    """构建工具按钮区，明确主次操作并突出风险按钮。"""
+    self.optional_btn_frame = ctk.CTkFrame(self.right_frame, corner_radius=10)
     self.optional_btn_frame.grid(row=start_row, column=0, sticky="ew", padx=5, pady=5)
     self.optional_btn_frame.columnconfigure((0, 1, 2, 3, 4), weight=1)
 
+    action_title = ctk.CTkLabel(
+        self.optional_btn_frame,
+        text="扩展工具",
+        font=("Microsoft YaHei", 12, "bold")
+    )
+    action_title.grid(row=0, column=0, columnspan=5, padx=5, pady=(5, 0), sticky="w")
+
     self.btn_check_consistency = ctk.CTkButton(
         self.optional_btn_frame, text="一致性审校", command=self.do_consistency_check, 
-        font=("Microsoft YaHei", 12), width=100  # 固定宽度
+        font=("Microsoft YaHei", 12), width=100, fg_color="#2563EB"
     )
-    self.btn_check_consistency.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
+    self.btn_check_consistency.grid(row=1, column=0, padx=5, pady=5, sticky="ew")
 
     self.btn_import_knowledge = ctk.CTkButton(
         self.optional_btn_frame, text="导入知识库", command=self.import_knowledge_handler,
-        font=("Microsoft YaHei", 12), width=100
+        font=("Microsoft YaHei", 12), width=100, fg_color="#2563EB"
     )
-    self.btn_import_knowledge.grid(row=0, column=1, padx=5, pady=5, sticky="ew")
+    self.btn_import_knowledge.grid(row=1, column=1, padx=5, pady=5, sticky="ew")
 
     self.btn_clear_vectorstore = ctk.CTkButton(
-        self.optional_btn_frame, text="清空向量库", fg_color="red", 
+        self.optional_btn_frame, text="清空向量库", fg_color="#B91C1C", 
         command=self.clear_vectorstore_handler, font=("Microsoft YaHei", 12), width=100
     )
-    self.btn_clear_vectorstore.grid(row=0, column=2, padx=5, pady=5, sticky="ew")
+    self.btn_clear_vectorstore.grid(row=1, column=2, padx=5, pady=5, sticky="ew")
 
     self.plot_arcs_btn = ctk.CTkButton(
         self.optional_btn_frame, text="查看剧情要点", command=self.show_plot_arcs_ui,
-        font=("Microsoft YaHei", 12), width=100
+        font=("Microsoft YaHei", 12), width=100, fg_color="#2563EB"
     )
-    self.plot_arcs_btn.grid(row=0, column=3, padx=5, pady=5, sticky="ew")
+    self.plot_arcs_btn.grid(row=1, column=3, padx=5, pady=5, sticky="ew")
 
     # 新增角色库按钮
     self.role_library_btn = ctk.CTkButton(
         self.optional_btn_frame, text="角色库", command=self.show_role_library,
-        font=("Microsoft YaHei", 12), width=100
+        font=("Microsoft YaHei", 12), width=100, fg_color="#0D9488"
     )
-    self.role_library_btn.grid(row=0, column=4, padx=5, pady=5, sticky="ew")
+    self.role_library_btn.grid(row=1, column=4, padx=5, pady=5, sticky="ew")
 
 def create_label_with_help_for_novel_params(self, parent, label_text, tooltip_key, row, column, font=None, sticky="e", padx=5, pady=5):
+    """创建参数标签和帮助按钮，减少重复布局代码。"""
     frame = ctk.CTkFrame(parent)
     frame.grid(row=row, column=column, padx=padx, pady=pady, sticky=sticky)
     frame.columnconfigure(0, weight=0)
