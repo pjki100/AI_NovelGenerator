@@ -213,6 +213,9 @@ class NovelGeneratorGUI:
 
     def update_status_bar(self):
         """更新底部状态栏文本，增强系统状态可见性。"""
+        if not hasattr(self, "status_label"):
+            return
+
         raw_path = self.filepath_var.get().strip()
         display_path = self._shorten_path(raw_path) if raw_path else "未设置"
 
