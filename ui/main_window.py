@@ -43,13 +43,14 @@ class NovelGeneratorGUI:
     """
     def __init__(self, master):
         self.master = master
-        self.master.title("Novel Generator GUI")
+        self.master.title("AI 小说生成工作台")
         try:
             if os.path.exists("icon.ico"):
                 self.master.iconbitmap("icon.ico")
         except Exception:
             pass
-        self.master.geometry("1350x840")
+        self.master.geometry("1420x900")
+        self.master.minsize(1200, 760)
 
         # --------------- 配置文件路径 ---------------
         self.config_file = "config.json"
@@ -165,7 +166,7 @@ class NovelGeneratorGUI:
 
         # --------------- 整体Tab布局 ---------------
         self.tabview = ctk.CTkTabview(self.master)
-        self.tabview.pack(fill="both", expand=True)
+        self.tabview.pack(fill="both", expand=True, padx=8, pady=(8, 4))
 
         # 创建各个标签页
         build_main_tab(self)
@@ -178,6 +179,56 @@ class NovelGeneratorGUI:
         build_summary_tab(self)
         build_chapters_tab(self)
         build_other_settings_tab(self)
+        self._build_status_bar()
+        self._register_status_bar_watchers()
+        self.update_status_bar()
+
+    def _build_status_bar(self):
+        """创建底部状态栏，用于实时展示关键上下文。"""
+        self.status_frame = ctk.CTkFrame(self.master, corner_radius=0)
+        self.status_frame.pack(fill="x", padx=8, pady=(0, 8))
+        self.status_frame.columnconfigure(0, weight=1)
+
+        self.status_label = ctk.CTkLabel(
+            self.status_frame,
+            text="状态：初始化中...",
+            anchor="w",
+            font=("Microsoft YaHei", 11)
+        )
+        self.status_label.grid(row=0, column=0, padx=10, pady=6, sticky="ew")
+
+    def _register_status_bar_watchers(self):
+        """注册状态栏监听器，在关键参数变化时自动刷新状态。"""
+        self.filepath_var.trace_add("write", lambda *_: self.update_status_bar())
+        self.chapter_num_var.trace_add("write", lambda *_: self.update_status_bar())
+
+        if hasattr(self, "chapter_select_var"):
+            self.chapter_select_var.trace_add("write", lambda *_: self.update_status_bar())
+
+    def _shorten_path(self, path: str, max_len: int = 64) -> str:
+        """压缩过长路径，避免状态栏被单个字段占满。"""
+        if len(path) <= max_len:
+            return path
+        return f"...{path[-(max_len - 3):]}"
+
+    def update_status_bar(self):
+        """更新底部状态栏文本，增强系统状态可见性。"""
+        if not hasattr(self, "status_label"):
+            return
+
+        raw_path = self.filepath_var.get().strip()
+        display_path = self._shorten_path(raw_path) if raw_path else "未设置"
+
+        chapter_num = self.chapter_num_var.get().strip() or "未设置"
+        selected_chapter = "未选择"
+        if hasattr(self, "chapter_select_var"):
+            selected_chapter = self.chapter_select_var.get().strip() or "未选择"
+
+        status_text = (
+            f"保存路径：{display_path}  |  当前章节号：{chapter_num}  |  "
+            f"章节管理选中：{selected_chapter}"
+        )
+        self.status_label.configure(text=status_text)
 
 
     # ----------------- 通用辅助函数 -----------------
